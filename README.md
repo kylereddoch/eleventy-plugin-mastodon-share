@@ -22,9 +22,6 @@ A drop-in Eleventy plugin that adds a **Share on Mastodon** button and a small *
   - [Table of contents](#table-of-contents)
   - [Install](#install)
   - [Quick start](#quick-start)
-  - [Demo](#demo)
-    - [▶️ One-click Deploy (Netlify)](#️-one-click-deploy-netlify)
-    - [💻 Run the demo locally](#-run-the-demo-locally)
   - [Options](#options)
   - [Usage examples](#usage-examples)
     - [Nunjucks](#nunjucks)
@@ -100,26 +97,29 @@ mastodon_hashtags: [cybersecurity, windows, wsus, patching]
 
 ---
 
+Here’s a Vercel-ready rewrite you can drop into your README:
+
 ## Demo
 
 See it in action:
 
-- **Live demo:** https://YOUR-DEMO-DOMAIN.example.com
+- **Live demo:** https://YOUR-VERCEL-URL.vercel.app
 - **Source code:** `demo/` folder in this repo
 
-Want your own copy of the demo? Spin up a working example to see the plugin in action.
+Spin up your own copy in one click or run it locally.
 
-### ▶️ One-click Deploy (Netlify)
+### ▶️ One-click Deploy (Vercel)
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/kylereddoch/eleventy-plugin-mastodon-share&projectName=eleventy-plugin-mastodon-share-demo&message=Deploy%20demo&stack=cms)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository=https%3A%2F%2Fgithub.com%2Fkylereddoch%2Feleventy-plugin-mastodon-share&project-name=eleventy-plugin-mastodon-share-demo&repository-name=eleventy-plugin-mastodon-share-demo&root-directory=demo&install-command=npm%20i&build-command=npm%20run%20build&output-directory=dist)
 
-This deploys the included `demo/` Eleventy site:
+This deploys the included `demo/` Eleventy site with the correct settings:
 
-- Build command: `npm run build` (from `demo/`)
-- Publish directory: `demo/dist`
-- Node: uses Netlify defaults (override in your site settings if needed)
+- **Root Directory:** `demo`
+- **Build Command:** `npm run build`
+- **Output Directory:** `dist`
+- **Node:** Vercel defaults (you can pin a version in `demo/package.json` if needed)
 
-> Netlify will ask for repo access, fork the repo to your account, and create a site from the `demo/` folder using the provided `netlify.toml`.
+> Vercel will fork/clone the repo into your account and configure the project using the `demo/` subdirectory.
 
 ### 💻 Run the demo locally
 
@@ -128,13 +128,13 @@ This deploys the included `demo/` Eleventy site:
 cd demo
 npm install
 npm run dev
-```
+````
 
-Set your canonical URL in  `demo/src/_data/site.js:`
+Set your canonical URL in `demo/src/_data/site.js`:
 
 ```js
 export default {
-  url: "https://your-demo-site.netlify.app",
+  url: "https://your-vercel-url.vercel.app",
 };
 ```
 
