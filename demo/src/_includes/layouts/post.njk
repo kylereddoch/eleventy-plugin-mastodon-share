@@ -2,20 +2,18 @@
 layout: layouts/base.njk
 ---
 
-<article>
-  <h2>{{ title }}</h2>
-  <p><small>Published {{ date | date: "%Y-%m-%d" }}</small></p>
+<article class="flow">
+  <h1>{{ title }}</h1>
+  <p class="lead">{{ description }}</p>
 
   {{ content | safe }}
 
-  <hr>
+  <div class="flow" style="margin-top: 2rem;">
+    <h3>Share</h3>
+    <p>If this helped, consider sharing it on Mastodon.</p>
 
-  <div class="flow" style="margin-top: 1.5rem;">
-    <h4>Enjoyed this post?</h4>
-    <p class="text-step-min-1">Share it on Mastodon or start a thread.</p>
-
-    {# Compose share text exactly like a real site #}
-    {% set fullUrl  = page.url | absoluteUrl(site.url) %}
+    {# Build share text like your site #}
+    {% set fullUrl  = page.url | url | absoluteUrl(site.url) %}
     {% set hashtags = mastodon_hashtags | default([]) %}
 
     {% set tagsInline = "" %}
@@ -25,7 +23,7 @@ layout: layouts/base.njk
 
     {% set text = (title ~ " — " ~ (description or "")) ~ "\n\n" ~ fullUrl ~ tagsInline %}
 
-    {# Render the plugin button + dropdown #}
-    {% mastodonShare text=text hashtags=hashtags label="Share on Mastodon" %}
+    {# Render the plugin shortcode #}
+    {% mastodonShare text=text hashtags=hashtags %}
   </div>
 </article>

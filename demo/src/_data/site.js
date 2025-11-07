@@ -1,4 +1,3 @@
 export default {
-  name: "Mastodon Share Demo",
-  url: process.env.SITE_URL || "http://localhost:8080"
+  url: "https://your-demo.vercel.app" // update after first deploy
 };

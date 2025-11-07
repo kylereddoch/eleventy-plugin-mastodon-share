@@ -3,9 +3,6 @@
 [![npm version](https://img.shields.io/npm/v/@kylereddoch/eleventy-plugin-mastodon-share?color=%23cba6f7)](https://www.npmjs.com/package/@kylereddoch/eleventy-plugin-mastodon-share)
 [![eleventy](https://img.shields.io/badge/eleventy-%5E3.0-000000.svg?logo=eleventy&logoColor=white)](https://www.11ty.dev/)
 [![license](https://img.shields.io/badge/license-MIT-2ea44f.svg)](#license)
-[![CI](https://img.shields.io/badge/CI-github--actions-inactive)](#contributing)
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/YOUR-NETLIFY-BADGE-ID/deploy-status)](https://app.netlify.com/sites/YOUR-NETLIFY-SITE-NAME/deploys)
 
 A drop-in Eleventy plugin that adds a **Share on Mastodon** button and a small **instance picker** with an optional **remember my instance** feature. Works with Nunjucks, Liquid, and JS templates.
 
@@ -22,6 +19,9 @@ A drop-in Eleventy plugin that adds a **Share on Mastodon** button and a small *
   - [Table of contents](#table-of-contents)
   - [Install](#install)
   - [Quick start](#quick-start)
+  - [Demo](#demo)
+    - [▶️ One-click Deploy (Vercel)](#️-one-click-deploy-vercel)
+    - [💻 Run the demo locally](#-run-the-demo-locally)
   - [Options](#options)
   - [Usage examples](#usage-examples)
     - [Nunjucks](#nunjucks)

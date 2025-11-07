@@ -1,31 +1,19 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-// Import the plugin from the repo root (one level up)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const pluginPath = path.resolve(__dirname, "../index.js");
-const { default: mastodonShare } = await import(pluginPath);
+// demo/.eleventy.js
+import mastodonShare from "../index.js";
 
 export default function (eleventyConfig) {
-  eleventyConfig.addFilter("absoluteUrl", (url, base) => {
-    if (!url) return base || "/";
-    try { return new URL(url, base).toString(); }
-    catch { return url; }
-  });
-
-  // Register the plugin *before* anything that might call the shortcodes
+  // Register plugin from the repo root (no npm publish needed for the demo)
   eleventyConfig.addPlugin(mastodonShare, {
-    // makes {{ mastodonShareStyles() }} output an inline <style>
-    inlineCss: true,
-    // output URLs for the assets (plugin will passthrough-copy them)
+    inlineCss: true,                 // exposes {% mastodonShareStyles %}
     cssUrlPath: "/assets/masto-share.css",
     jsUrlPath: "/assets/masto-share.js",
     svgUrlPath: "/assets/mastodon.svg",
-    // optional label/fallback tweaks if you want
     label: "Share on Mastodon",
-    fallbackHost: "mastodon.social",
+    fallbackHost: "mastodon.social"
   });
+
+  // Only passthrough *demo* assets, not plugin assets (plugin handles its own)
+  eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
 
   return {
     dir: { input: "src", output: "dist", includes: "_includes", data: "_data" },
