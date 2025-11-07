@@ -1,0 +1,11 @@
+# Netlify: build the demo subfolder
+[build]
+  base    = "demo"
+  publish = "demo/dist"
+  command = "npm run build"
+
+# Optional: pretty URLs
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

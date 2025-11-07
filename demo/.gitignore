@@ -1,0 +1,5 @@
+dist/
+
+# Netlify configs (root or in subfolders)
+netlify.toml
+**/netlify.toml

@@ -1,0 +1,31 @@
+{
+  "name": "@kylereddoch/eleventy-plugin-mastodon-share",
+  "version": "0.1.0",
+  "description": "Eleventy plugin: Share on Mastodon button with instance picker + remember feature",
+  "type": "module",
+  "main": "index.js",
+  "exports": "./index.js",
+  "keywords": [
+    "eleventy",
+    "11ty",
+    "plugin",
+    "mastodon",
+    "share"
+  ],
+  "author": "Kyle Reddoch <kyle@kylereddoch.me>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kylereddoch/eleventy-plugin-mastodon-share.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kylereddoch/eleventy-plugin-mastodon-share/issues"
+  },
+  "homepage": "https://github.com/kylereddoch/eleventy-plugin-mastodon-share#readme",
+  "files": [
+    "index.js",
+    "assets/",
+    "README.md",
+    "LICENSE"
+  ]
+}

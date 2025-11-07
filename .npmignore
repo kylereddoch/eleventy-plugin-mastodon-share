@@ -1,0 +1,52 @@
+# build/output from any demos
+_dist/
+dist/
+build/
+tmp/
+coverage/
+
+# local/demo sites and docs
+demo/
+examples/
+example/
+site/
+docs/
+.storybook/
+
+# Eleventy or site sources not needed by the plugin
+src/
+_includes/
+.eleventy.js
+.eleventyignore
+
+# tests & configs
+test/
+tests/
+__tests__/
+*.spec.* 
+*.test.*
+jest.config.*
+vitest.config.*
+playwright.config.*
+
+# env & tooling
+.env*
+.vscode/
+.idea/
+.github/
+.githooks/
+*.log
+.nyc_output/
+*.swp
+.DS_Store
+Thumbs.db
+
+# package managers
+node_modules/
+pnpm-lock.yaml
+yarn.lock
+npm-debug.log
+
+# Netlify configs (root or in subfolders)
+netlify.toml
+**/netlify.toml

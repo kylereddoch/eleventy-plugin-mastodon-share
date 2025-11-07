@@ -1,0 +1,156 @@
+/* =========================
+   Mastodon Share (site-themed)
+   ========================= */
+
+/* One token to control size for this widget */
+.masto-share {
+    --masto-share-font: var(--size-step-min-1);
+}
+
+/* Buttons side-by-side on desktop, stacked on phones */
+.masto-share {
+    display: flex;
+    align-items: center;
+    gap: var(--space-l);
+    flex-wrap: wrap;
+    /* wrap if space is tight */
+}
+
+@media (max-width: 40rem) {
+    .masto-share {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-l);
+    }
+}
+
+/* Use your button system; tighter icon gap + smaller type in this widget */
+.masto-share .button {
+    --button-gap: var(--space-3xs);
+    --button-font-size: var(--masto-share-font);
+    /* --button-padding: var(--space-2xs) var(--space-s) var(--space-3xs) var(--space-s); */
+}
+
+/* ===== Dropdown (native <details>) */
+.masto-share__menu details {
+    position: relative;
+    display: inline-block;
+    /* anchor to trigger width */
+}
+
+.masto-share__menu summary {
+    list-style: none;
+}
+
+.masto-share__menu summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Position directly under the trigger and match its width (min 18rem) */
+.masto-share__dropdown {
+    position: absolute;
+    top: calc(100% + .35rem);
+    left: 0;
+    right: auto;
+    bottom: auto;
+    transform: none;
+
+    inline-size: max(18rem, 100%);
+    min-inline-size: 18rem;
+
+    background: var(--color-gray-900);
+    color: var(--color-text);
+    font-size: var(--masto-share-font);
+    line-height: var(--leading-flat);
+    border: 1px solid var(--color-bg-accent);
+    border-radius: var(--border-radius-small);
+    padding: .25rem;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .32);
+    z-index: 1000;
+
+    overflow: hidden;
+    /* clip hover backgrounds */
+    box-sizing: border-box;
+}
+
+/* Optional right alignment: <details data-align="end"> */
+.masto-share__menu details[data-align="end"] .masto-share__dropdown {
+    left: auto;
+    right: 0;
+}
+
+/* Sections + divider (compact spacing) */
+.masto-share__section {
+    display: grid;
+    gap: 2px;
+    padding: .25rem;
+}
+
+.masto-share__divider {
+    margin: .15rem .25rem !important;
+    border: 0;
+    border-top: 1px solid var(--color-bg-accent);
+    opacity: .85;
+}
+
+/* Menu rows */
+.masto-share__dropdown a,
+.masto-share__dropdown button {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    inline-size: 100%;
+    padding: .45rem .6rem;
+    border-radius: var(--border-radius-small);
+    background: none;
+    border: 0;
+    color: inherit;
+    text-align: left;
+    text-decoration: none;
+    font: inherit;
+    /* inherit widget size/line-height */
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.masto-share__dropdown a:hover,
+.masto-share__dropdown button:hover {
+    background: color-mix(in oklab, var(--color-gray-900) 80%, var(--color-text));
+}
+
+/* Focus ring */
+.masto-share__dropdown a:focus-visible,
+.masto-share__dropdown button:focus-visible,
+.masto-share__menu summary:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+    border-radius: var(--border-radius-small);
+}
+
+/* Motion-safe open animation */
+@media (prefers-reduced-motion: no-preference) {
+    .masto-share__dropdown {
+        animation: mastoDrop .12s ease-out both;
+    }
+
+    @keyframes mastoDrop {
+        from {
+            opacity: 0;
+            translate: 0 -4px;
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+        }
+    }
+}
+
+/* Font Awesome icon sizing (summary + menu items) */
+.masto-share :where(.button, .masto-share__dropdown) :where(.fa-mastodon) {
+    --masto-icon-size: 1.1em;
+    font-size: var(--masto-icon-size);
+    line-height: 1;
+    vertical-align: middle;
+    margin-right: .4rem;
+}

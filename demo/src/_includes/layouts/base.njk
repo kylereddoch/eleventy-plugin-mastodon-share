@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ title or site.name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --color-bg: #0f1115;
+      --color-text: #e5e7eb;
+      --color-primary: #cba6f7;
+      --space: 1rem;
+    }
+    html,body { background:var(--color-bg); color:var(--color-text); font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    a { color: var(--color-primary); }
+    .wrap { max-width: 60rem; margin: 0 auto; padding: 2rem 1rem; }
+    header, footer { opacity:.9; }
+    .prose > * + * { margin-top: 1rem; }
+  </style>
+  {{ mastodonShareStyles() | safe }}
+  {{ mastodonShareScript() | safe }}
+  <link rel="stylesheet" href="/assets/masto-share.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="prose">
+      <h1>{{ site.name }}</h1>
+      <nav><a href="/">Home</a> · <a href="/posts/">Posts</a></nav>
+    </header>
+
+    <main class="prose">
+      {{ content | safe }}
+    </main>
+
+    <footer class="prose" style="margin-top:2rem">
+      <small>Demo of <code>eleventy-plugin-mastodon-share</code></small>
+    </footer>
+  </div>
+  <script src="/assets/masto-share.js" defer></script>
+</body>
+</html>

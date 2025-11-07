@@ -1,0 +1,31 @@
+---
+layout: layouts/base.njk
+---
+
+<article>
+  <h2>{{ title }}</h2>
+  <p><small>Published {{ date | date: "%Y-%m-%d" }}</small></p>
+
+  {{ content | safe }}
+
+  <hr>
+
+  <div class="flow" style="margin-top: 1.5rem;">
+    <h4>Enjoyed this post?</h4>
+    <p class="text-step-min-1">Share it on Mastodon or start a thread.</p>
+
+    {# Compose share text exactly like a real site #}
+    {% set fullUrl  = page.url | absoluteUrl(site.url) %}
+    {% set hashtags = mastodon_hashtags | default([]) %}
+
+    {% set tagsInline = "" %}
+    {% if (hashtags | length) > 0 %}
+      {% set tagsInline = "\n\n#" ~ (hashtags | join(' #')) %}
+    {% endif %}
+
+    {% set text = (title ~ " — " ~ (description or "")) ~ "\n\n" ~ fullUrl ~ tagsInline %}
+
+    {# Render the plugin button + dropdown #}
+    {% mastodonShare text=text hashtags=hashtags label="Share on Mastodon" %}
+  </div>
+</article>
