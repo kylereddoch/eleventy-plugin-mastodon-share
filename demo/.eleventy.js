@@ -14,10 +14,17 @@ export default function (eleventyConfig) {
     catch { return url; }
   });
 
+  // Register the plugin *before* anything that might call the shortcodes
   eleventyConfig.addPlugin(mastodonShare, {
+    // makes {{ mastodonShareStyles() }} output an inline <style>
+    inlineCss: true,
+    // output URLs for the assets (plugin will passthrough-copy them)
+    cssUrlPath: "/assets/masto-share.css",
+    jsUrlPath: "/assets/masto-share.js",
+    svgUrlPath: "/assets/mastodon.svg",
+    // optional label/fallback tweaks if you want
     label: "Share on Mastodon",
     fallbackHost: "mastodon.social",
-    inlineCss: false
   });
 
   return {
