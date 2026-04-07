@@ -1,12 +1,7 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "demo/package.json",
-            "use": "@vercel/static-build",
-            "config": {
-                "distDir": "dist"
-            }
-        }
-    ]
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm --prefix demo install",
+  "buildCommand": "npm --prefix demo run build",
+  "devCommand": "npm --prefix demo run dev",
+  "outputDirectory": "demo/dist"
 }
