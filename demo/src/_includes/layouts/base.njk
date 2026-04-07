@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <title>{{ title or "Demo" }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  {# Injects the plugin’s minimal CSS because inlineCss: true #}
   {% mastodonShareStyles %}
   <link rel="stylesheet" href="/assets/demo.css">
 </head>
@@ -20,7 +19,6 @@
     </article>
   </main>
 
-  {# Adds the plugin’s JS (instance picker + remember) #}
   {% mastodonShareScript %}
 </body>
 </html>

@@ -1,156 +1,258 @@
-/* =========================
-   Mastodon Share (site-themed)
-   ========================= */
-
-/* One token to control size for this widget */
 .masto-share {
-    --masto-share-font: var(--size-step-min-1);
+  --masto-share-accent: #2754c5;
+  --masto-share-accent-hover: #1d43a2;
+  --masto-share-border: #c7cfdb;
+  --masto-share-border-strong: #9eabc0;
+  --masto-share-surface: #ffffff;
+  --masto-share-surface-muted: #f5f7fb;
+  --masto-share-text: #18212f;
+  --masto-share-text-muted: #5f6c80;
+  --masto-share-shadow: 0 18px 40px rgba(19, 32, 54, 0.18);
+  --masto-share-radius: 0.85rem;
+  --masto-share-gap: 0.75rem;
+  --masto-share-font-size: 1rem;
+  --masto-share-focus: rgba(39, 84, 197, 0.28);
+
+  display: flex;
+  align-items: center;
+  gap: var(--masto-share-gap);
+  flex-wrap: wrap;
+  color: var(--masto-share-text);
+  font-size: var(--masto-share-font-size);
+  line-height: 1.45;
 }
 
-/* Buttons side-by-side on desktop, stacked on phones */
-.masto-share {
-    display: flex;
-    align-items: center;
-    gap: var(--space-l);
-    flex-wrap: wrap;
-    /* wrap if space is tight */
+.masto-share * {
+  box-sizing: border-box;
 }
 
 @media (max-width: 40rem) {
-    .masto-share {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-l);
-    }
+  .masto-share {
+    align-items: stretch;
+  }
 }
 
-/* Use your button system; tighter icon gap + smaller type in this widget */
-.masto-share .button {
-    --button-gap: var(--space-3xs);
-    --button-font-size: var(--masto-share-font);
-    /* --button-padding: var(--space-2xs) var(--space-s) var(--space-3xs) var(--space-s); */
+.masto-share__button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 2.9rem;
+  padding: 0.72rem 1rem;
+  border: 1px solid var(--masto-share-border);
+  border-radius: var(--masto-share-radius);
+  background: var(--masto-share-surface);
+  color: var(--masto-share-text);
+  text-decoration: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
 }
 
-/* ===== Dropdown (native <details>) */
+.masto-share__button:hover {
+  border-color: var(--masto-share-border-strong);
+  transform: translateY(-1px);
+}
+
+.masto-share__button:focus-visible,
+.masto-share__menu-button:focus-visible,
+.masto-share__save-button:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem var(--masto-share-focus);
+}
+
+.masto-share__button--primary {
+  background: var(--masto-share-accent);
+  border-color: var(--masto-share-accent);
+  color: #ffffff;
+}
+
+.masto-share__button--primary:hover {
+  background: var(--masto-share-accent-hover);
+  border-color: var(--masto-share-accent-hover);
+}
+
+.masto-share__button--secondary {
+  background: var(--masto-share-surface);
+}
+
+.masto-share__button img,
+.masto-share__button i,
+.masto-share__menu-button i {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  flex: 0 0 auto;
+}
+
+.masto-share__button img {
+  display: block;
+}
+
+.masto-share__button small {
+  display: block;
+  margin-top: 0.15rem;
+  color: inherit;
+  opacity: 0.82;
+  font-size: 0.82em;
+  font-weight: 500;
+}
+
+.masto-share__button em {
+  font-style: normal;
+  font-weight: 700;
+}
+
+.masto-share__menu {
+  position: relative;
+}
+
 .masto-share__menu details {
-    position: relative;
-    display: inline-block;
-    /* anchor to trigger width */
+  position: relative;
 }
 
 .masto-share__menu summary {
-    list-style: none;
+  list-style: none;
 }
 
 .masto-share__menu summary::-webkit-details-marker {
-    display: none;
+  display: none;
 }
 
-/* Position directly under the trigger and match its width (min 18rem) */
 .masto-share__dropdown {
-    position: absolute;
-    top: calc(100% + .35rem);
-    left: 0;
-    right: auto;
-    bottom: auto;
-    transform: none;
-
-    inline-size: max(18rem, 100%);
-    min-inline-size: 18rem;
-
-    background: var(--color-gray-900);
-    color: var(--color-text);
-    font-size: var(--masto-share-font);
-    line-height: var(--leading-flat);
-    border: 1px solid var(--color-bg-accent);
-    border-radius: var(--border-radius-small);
-    padding: .25rem;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, .32);
-    z-index: 1000;
-
-    overflow: hidden;
-    /* clip hover backgrounds */
-    box-sizing: border-box;
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  left: 0;
+  z-index: 1000;
+  inline-size: min(24rem, calc(100vw - 2rem));
+  padding: 0.4rem;
+  border: 1px solid var(--masto-share-border);
+  border-radius: calc(var(--masto-share-radius) + 0.15rem);
+  background: var(--masto-share-surface);
+  color: var(--masto-share-text);
+  box-shadow: var(--masto-share-shadow);
 }
 
-/* Optional right alignment: <details data-align="end"> */
-.masto-share__menu details[data-align="end"] .masto-share__dropdown {
-    left: auto;
-    right: 0;
+.masto-share__sections {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* Sections + divider (compact spacing) */
 .masto-share__section {
-    display: grid;
-    gap: 2px;
-    padding: .25rem;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.4rem;
+}
+
+.masto-share__eyebrow {
+  margin: 0 0 0.1rem;
+  color: var(--masto-share-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .masto-share__divider {
-    margin: .15rem .25rem !important;
-    border: 0;
-    border-top: 1px solid var(--color-bg-accent);
-    opacity: .85;
+  margin: 0.2rem 0.4rem;
+  border: 0;
+  border-top: 1px solid var(--masto-share-border);
 }
 
-/* Menu rows */
-.masto-share__dropdown a,
-.masto-share__dropdown button {
-    display: flex;
-    align-items: center;
-    gap: .55rem;
-    inline-size: 100%;
-    padding: .45rem .6rem;
-    border-radius: var(--border-radius-small);
-    background: none;
-    border: 0;
-    color: inherit;
-    text-align: left;
-    text-decoration: none;
-    font: inherit;
-    /* inherit widget size/line-height */
-    cursor: pointer;
-    box-sizing: border-box;
+.masto-share__menu-button,
+.masto-share__save-button {
+  appearance: none;
+  inline-size: 100%;
+  min-height: 2.5rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  background: transparent;
+  color: var(--masto-share-text);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
 }
 
-.masto-share__dropdown a:hover,
-.masto-share__dropdown button:hover {
-    background: color-mix(in oklab, var(--color-gray-900) 80%, var(--color-text));
+.masto-share__menu-button:hover,
+.masto-share__save-button:hover {
+  background: var(--masto-share-surface-muted);
 }
 
-/* Focus ring */
-.masto-share__dropdown a:focus-visible,
-.masto-share__dropdown button:focus-visible,
-.masto-share__menu summary:focus-visible {
-    outline: 2px solid var(--color-secondary);
-    outline-offset: 2px;
-    border-radius: var(--border-radius-small);
+.masto-share__menu-button[hidden],
+.masto-share__save-button[hidden] {
+  display: none;
 }
 
-/* Motion-safe open animation */
+.masto-share__menu-button:disabled,
+.masto-share__save-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.masto-share__instance-list {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.masto-share__instance {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.35rem;
+  align-items: stretch;
+}
+
+.masto-share__save-button {
+  inline-size: auto;
+  min-width: 4.5rem;
+  border-color: var(--masto-share-border);
+  color: var(--masto-share-text-muted);
+  text-align: center;
+}
+
+.masto-share__save-button:hover {
+  border-color: var(--masto-share-border-strong);
+  color: var(--masto-share-text);
+}
+
+.masto-share__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-    .masto-share__dropdown {
-        animation: mastoDrop .12s ease-out both;
+  .masto-share__dropdown {
+    animation: masto-share-pop 140ms ease-out both;
+    transform-origin: top left;
+  }
+
+  @keyframes masto-share-pop {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.985);
     }
 
-    @keyframes mastoDrop {
-        from {
-            opacity: 0;
-            translate: 0 -4px;
-        }
-
-        to {
-            opacity: 1;
-            translate: 0 0;
-        }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
-}
-
-/* Font Awesome icon sizing (summary + menu items) */
-.masto-share :where(.button, .masto-share__dropdown) :where(.fa-mastodon) {
-    --masto-icon-size: 1.1em;
-    font-size: var(--masto-icon-size);
-    line-height: 1;
-    vertical-align: middle;
-    margin-right: .4rem;
+  }
 }

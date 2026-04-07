@@ -9,21 +9,9 @@ layout: layouts/base.njk
   {{ content | safe }}
 
   <div class="flow" style="margin-top: 2rem;">
-    <h3>Share</h3>
-    <p>If this helped, consider sharing it on Mastodon.</p>
+    <h2>Share This Post</h2>
+    <p>The shortcode below only needs the post metadata. The plugin builds the Mastodon text and canonical URL for you.</p>
 
-    {# Build share text like your site #}
-    {% set fullUrl  = page.url | url | absoluteUrl(site.url) %}
-    {% set hashtags = mastodon_hashtags | default([]) %}
-
-    {% set tagsInline = "" %}
-    {% if (hashtags | length) > 0 %}
-      {% set tagsInline = "\n\n#" ~ (hashtags | join(' #')) %}
-    {% endif %}
-
-    {% set text = (title ~ " — " ~ (description or "")) ~ "\n\n" ~ fullUrl ~ tagsInline %}
-
-    {# Render the plugin shortcode #}
-    {% mastodonShare text=text hashtags=hashtags %}
+    {% mastodonSharePost title, description, mastodon_hashtags %}
   </div>
 </article>

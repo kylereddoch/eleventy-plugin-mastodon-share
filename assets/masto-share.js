@@ -1,159 +1,280 @@
 (function () {
-    // --- one-time init guard (prevents double-binding) ---
-    if (window.__mastoInit) return;
-    window.__mastoInit = true;
+  if (window.__mastoInit) {
+    return;
+  }
 
-    const KEY = 'mastoPreferredInstance';
-    let __promptOpen = false; // guard to avoid double prompt re-entry
+  window.__mastoInit = true;
 
-    // --- storage helpers ---
-    const savedHost = () => localStorage.getItem(KEY) || '';
-    const setSaved = (h) => { localStorage.setItem(KEY, h); paintIndicators(); };
-    const clearSaved = () => { localStorage.removeItem(KEY); paintIndicators(); };
+  function getStorageKey(root) {
+    return root?.getAttribute("data-masto-storage-key") || "mastoPreferredInstance";
+  }
 
-    // --- utils ---
-    function normHost(input) {
-        if (!input) return '';
-        try {
-            const u = new URL(input.includes('://') ? input : 'https://' + input);
-            return u.hostname.toLowerCase();
-        } catch {
-            return String(input).replace(/^https?:\/\//i, '').split('/')[0].toLowerCase();
-        }
+  function readSavedHost(root) {
+    try {
+      return localStorage.getItem(getStorageKey(root)) || "";
+    } catch {
+      return "";
     }
-    const likelyHost = (h) => /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(h);
+  }
 
-    function openShare(host, query) {
-        host = normHost(host);
-        if (!host) return;
-        window.open(`https://${host}/share${query || ''}`, '_blank', 'noopener');
+  function writeSavedHost(root, host) {
+    try {
+      localStorage.setItem(getStorageKey(root), host);
+    } catch {
+      return false;
     }
 
-    function getDetails(fromEl) {
-        const wrap = fromEl.closest?.('.masto-share') || fromEl.closest?.('.masto-share__menu') || null;
-        return wrap ? wrap.querySelector('.masto-share__menu details') : null;
+    paintIndicators();
+    return true;
+  }
+
+  function clearSavedHost(root) {
+    try {
+      localStorage.removeItem(getStorageKey(root));
+    } catch {
+      return false;
     }
 
-    function closeMenu(fromEl) {
-        const details = getDetails(fromEl);
-        if (details) {
-            details.open = false;
-            const summary = details.querySelector('summary');
-            if (summary) summary.focus({ preventScroll: true });
-        }
+    paintIndicators();
+    return true;
+  }
+
+  function normalizeHost(input) {
+    if (!input) {
+      return "";
     }
 
-    function paintIndicators() {
-        const saved = savedHost();
-        document.querySelectorAll('.masto-share').forEach(root => {
-            const label = root.querySelector('[data-masto-current]');
-            if (label) label.textContent = saved || 'none';
+    try {
+      var url = new URL(input.includes("://") ? input : "https://" + input);
+      return url.hostname.toLowerCase();
+    } catch {
+      return String(input)
+        .trim()
+        .replace(/^https?:\/\//i, "")
+        .split("/")[0]
+        .toLowerCase();
+    }
+  }
 
-            const has = !!saved;
-            root.querySelectorAll("[data-masto-action='use-saved']").forEach(el => el.style.display = has ? '' : 'none');
-            root.querySelectorAll("[data-masto-action='clear-saved']").forEach(el => el.style.display = has ? '' : 'none');
+  function looksLikeHost(host) {
+    return /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(host);
+  }
 
-            const savedSection = root.querySelector('.masto-share__section--saved');
-            const divider = root.querySelector('.masto-share__divider');
-            if (savedSection) savedSection.style.display = has ? '' : 'none';
-            if (divider) divider.style.display = has ? '' : 'none';
-        });
+  function buildShareUrl(host, query) {
+    return "https://" + host + "/share" + (query || "");
+  }
+
+  function openShare(host, query) {
+    var normalizedHost = normalizeHost(host);
+    if (!normalizedHost) {
+      return;
     }
 
-    function askForHost(defaultVal) {
-        if (__promptOpen) return null;
-        __promptOpen = true;
-        const input = prompt('Enter your Mastodon instance (e.g. infosec.exchange):', defaultVal || '');
-        __promptOpen = false;
-        if (input == null) return null;
-        const h = normHost(input || '');
-        if (!h) return null;
-        if (!likelyHost(h)) { alert('That does not look like a valid instance host.'); return null; }
-        return h;
+    window.open(buildShareUrl(normalizedHost, query), "_blank", "noopener,noreferrer");
+  }
+
+  function getDetails(root) {
+    return root?.querySelector(".masto-share__menu details") || null;
+  }
+
+  function closeMenu(root) {
+    var details = getDetails(root);
+    if (!details) {
+      return;
     }
 
-    // Delegated handler for share UI clicks (inside widget)
-    document.addEventListener('click', function (ev) {
-        const el = ev.target.closest('[data-masto-action],[data-masto-host]');
-        if (!el) return;
+    details.open = false;
 
-        const root = el.closest('.masto-share');
-        if (!root) return;
+    var summary = details.querySelector("summary");
+    if (summary) {
+      summary.focus({ preventScroll: true });
+    }
+  }
 
-        const query = root.getAttribute('data-masto-query') || '';
-        const fallback = root.getAttribute('data-masto-fallback') || 'mastodon.social';
+  function announce(root, message) {
+    var status = root?.querySelector("[data-masto-status]");
+    if (!status) {
+      return;
+    }
 
-        if (el.hasAttribute('data-masto-host')) {
-            ev.preventDefault();
-            openShare(el.getAttribute('data-masto-host'), query);
-            closeMenu(el);
-            return;
-        }
-
-        const action = el.getAttribute('data-masto-action');
-
-        if (action === 'primary-share') {
-            ev.preventDefault();
-            const current = savedHost();
-            if (current) openShare(current, query);
-            else {
-                const h = askForHost(fallback);
-                if (!h) return;
-                setSaved(h);
-                openShare(h, query);
-            }
-            closeMenu(el);
-            return;
-        }
-
-        if (action === 'use-saved') {
-            ev.preventDefault();
-            const h = savedHost();
-            if (!h) { alert('No saved instance yet. Choose “Set / change saved instance…”.'); return; }
-            openShare(h, query);
-            closeMenu(el);
-            return;
-        }
-
-        if (action === 'set-saved') {
-            ev.preventDefault();
-            const h = askForHost(savedHost() || fallback);
-            if (!h) return;
-            setSaved(h);
-            alert(`Saved: ${h}`);
-            closeMenu(el);
-            return;
-        }
-
-        if (action === 'clear-saved') {
-            ev.preventDefault();
-            clearSaved();
-            alert('Saved instance cleared.');
-            closeMenu(el);
-            return;
-        }
-    }, { capture: true });
-
-    // === New: click-outside to close any open menu ===
-    document.addEventListener('click', function (ev) {
-        // if click happened inside any open details, ignore
-        const openDetails = document.querySelectorAll('.masto-share .masto-share__menu details[open]');
-        openDetails.forEach(d => {
-            if (!d.contains(ev.target)) d.open = false;
-        });
+    status.textContent = "";
+    window.requestAnimationFrame(function () {
+      status.textContent = message;
     });
+  }
 
-    // === New: Escape key closes the nearest open menu ===
-    document.addEventListener('keydown', function (ev) {
-        if (ev.key !== 'Escape') return;
-        const openDetails = document.querySelector('.masto-share .masto-share__menu details[open]');
-        if (openDetails) {
-            openDetails.open = false;
-            const summary = openDetails.querySelector('summary');
-            if (summary) summary.focus({ preventScroll: true });
-        }
+  function askForHost(defaultValue) {
+    var input = window.prompt(
+      "Enter your Mastodon instance host (for example: infosec.exchange)",
+      defaultValue || ""
+    );
+
+    if (input == null) {
+      return null;
+    }
+
+    var normalizedHost = normalizeHost(input);
+    if (!normalizedHost) {
+      return null;
+    }
+
+    if (!looksLikeHost(normalizedHost)) {
+      window.alert("That does not look like a valid Mastodon instance host.");
+      return null;
+    }
+
+    return normalizedHost;
+  }
+
+  function paintIndicators() {
+    document.querySelectorAll(".masto-share").forEach(function (root) {
+      var saved = readSavedHost(root);
+      var fallback = root.getAttribute("data-masto-fallback") || "mastodon.social";
+      var query = root.getAttribute("data-masto-query") || "";
+
+      root.querySelectorAll("[data-masto-current]").forEach(function (label) {
+        label.textContent = saved || "none";
+      });
+
+      root.querySelectorAll("[data-masto-action='use-saved']").forEach(function (button) {
+        button.hidden = !saved;
+        button.disabled = !saved;
+      });
+
+      root.querySelectorAll("[data-masto-action='clear-saved']").forEach(function (button) {
+        button.hidden = !saved;
+        button.disabled = !saved;
+      });
+
+      var primaryButton = root.querySelector("[data-masto-action='primary-share']");
+      if (primaryButton) {
+        primaryButton.href = buildShareUrl(saved || fallback, query);
+      }
     });
+  }
 
-    // Paint indicators on load (including “(none)”)
-    document.addEventListener('DOMContentLoaded', paintIndicators);
+  document.addEventListener(
+    "click",
+    function (event) {
+      var trigger = event.target.closest("[data-masto-action],[data-masto-host],[data-masto-save-host]");
+      if (!trigger) {
+        return;
+      }
+
+      var root = trigger.closest(".masto-share");
+      if (!root) {
+        return;
+      }
+
+      var query = root.getAttribute("data-masto-query") || "";
+      var fallback = root.getAttribute("data-masto-fallback") || "mastodon.social";
+
+      if (trigger.hasAttribute("data-masto-host")) {
+        event.preventDefault();
+        openShare(trigger.getAttribute("data-masto-host"), query);
+        closeMenu(root);
+        return;
+      }
+
+      if (trigger.hasAttribute("data-masto-save-host")) {
+        event.preventDefault();
+        var favoriteHost = normalizeHost(trigger.getAttribute("data-masto-save-host"));
+        if (!favoriteHost) {
+          return;
+        }
+
+        if (writeSavedHost(root, favoriteHost)) {
+          announce(root, "Saved " + favoriteHost + " as your preferred instance.");
+        }
+        closeMenu(root);
+        return;
+      }
+
+      var action = trigger.getAttribute("data-masto-action");
+
+      if (action === "primary-share") {
+        event.preventDefault();
+
+        var currentHost = readSavedHost(root);
+        if (currentHost) {
+          openShare(currentHost, query);
+        } else {
+          var enteredHost = askForHost(fallback);
+          if (!enteredHost) {
+            return;
+          }
+
+          writeSavedHost(root, enteredHost);
+          announce(root, "Saved " + enteredHost + " as your preferred instance.");
+          openShare(enteredHost, query);
+        }
+
+        closeMenu(root);
+        return;
+      }
+
+      if (action === "use-saved") {
+        event.preventDefault();
+        var savedHost = readSavedHost(root);
+        if (!savedHost) {
+          return;
+        }
+
+        openShare(savedHost, query);
+        closeMenu(root);
+        return;
+      }
+
+      if (action === "set-saved") {
+        event.preventDefault();
+        var manualHost = askForHost(readSavedHost(root) || fallback);
+        if (!manualHost) {
+          return;
+        }
+
+        writeSavedHost(root, manualHost);
+        announce(root, "Saved " + manualHost + " as your preferred instance.");
+        closeMenu(root);
+        return;
+      }
+
+      if (action === "clear-saved") {
+        event.preventDefault();
+        if (clearSavedHost(root)) {
+          announce(root, "Cleared your saved Mastodon instance.");
+        }
+        closeMenu(root);
+      }
+    },
+    { capture: true }
+  );
+
+  document.addEventListener("click", function (event) {
+    document.querySelectorAll(".masto-share .masto-share__menu details[open]").forEach(function (details) {
+      if (!details.contains(event.target)) {
+        details.open = false;
+      }
+    });
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape") {
+      return;
+    }
+
+    var openDetails = document.querySelector(".masto-share .masto-share__menu details[open]");
+    if (!openDetails) {
+      return;
+    }
+
+    openDetails.open = false;
+
+    var summary = openDetails.querySelector("summary");
+    if (summary) {
+      summary.focus({ preventScroll: true });
+    }
+  });
+
+  paintIndicators();
+  document.addEventListener("DOMContentLoaded", paintIndicators);
 })();

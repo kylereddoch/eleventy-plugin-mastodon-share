@@ -1,19 +1,32 @@
 {
   "name": "@kylereddoch/eleventy-plugin-mastodon-share",
-  "version": "0.1.0",
-  "description": "Eleventy plugin: Share on Mastodon button with instance picker + remember feature",
+  "version": "0.2.0",
+  "description": "Eleventy plugin for Mastodon sharing with an instance picker, save option, and page-aware shortcodes",
   "type": "module",
-  "main": "index.js",
-  "exports": "./index.js",
+  "main": "index.cjs",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./index.cjs",
+      "default": "./index.js"
+    }
+  },
   "keywords": [
     "eleventy",
     "11ty",
     "plugin",
     "mastodon",
-    "share"
+    "share",
+    "fediverse"
   ],
   "author": "Kyle Reddoch <kyle@kylereddoch.me>",
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "peerDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kylereddoch/eleventy-plugin-mastodon-share.git"
@@ -22,10 +35,38 @@
     "url": "https://github.com/kylereddoch/eleventy-plugin-mastodon-share/issues"
   },
   "homepage": "https://github.com/kylereddoch/eleventy-plugin-mastodon-share#readme",
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/kylereddoch"
+    },
+    {
+      "type": "ko-fi",
+      "url": "https://ko-fi.com/kylereddoch"
+    },
+    {
+      "type": "buymeacoffee",
+      "url": "https://buymeacoffee.com/kylereddoch"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test test/plugin.test.js",
+    "build:demo": "npm --prefix demo run build",
+    "verify": "npm test && npm run build:demo"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.5"
+  },
   "files": [
     "index.js",
+    "index.cjs",
+    "shared.cjs",
     "assets/",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ]
 }

@@ -1,3 +1,3 @@
 export default {
-  url: "https://your-demo.vercel.app" // update after first deploy
+  url: process.env.SITE_URL || "https://your-demo.vercel.app",
 };

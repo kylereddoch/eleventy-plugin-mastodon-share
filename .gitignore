@@ -1,0 +1,10 @@
+node_modules/
+demo/node_modules/
+
+dist/
+demo/dist/
+test/fixtures/site/dist/
+
+coverage/
+.DS_Store
+Thumbs.db
